@@ -1,0 +1,5 @@
+penpot.{$SELFHOST_DOMAIN} {
+      reverse_proxy penpot-frontend:80
+      tls {$EMAIL}
+}
+

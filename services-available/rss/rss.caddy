@@ -1,0 +1,3 @@
+rss.{$SELFHOST_DOMAIN} {
+	reverse_proxy rss:80
+}

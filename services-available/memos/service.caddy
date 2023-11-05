@@ -1,0 +1,4 @@
+memos.{$SELFHOST_DOMAIN} {
+	reverse_proxy memos:5230
+	tls {$EMAIL}
+}

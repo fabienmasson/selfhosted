@@ -1,0 +1,6 @@
+gitea.{$SELFHOST_DOMAIN} {
+	reverse_proxy gitea:3000
+}
+rss.{$SELFHOST_DOMAIN} {
+	reverse_proxy rss:80
+}

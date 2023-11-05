@@ -1,0 +1,18 @@
+version: "2"
+services:
+    rss:
+        image: ghcr.io/ssddanbrown/rss:latest
+        container_name: rss
+        environment:
+            - APP_NAME=RSS
+        volumes:
+            - ../../data/rss:/app/storage
+        expose:
+            - "80"
+        restart: unless-stopped
+
+networks:
+  default:
+    name: local 
+    external: true
+

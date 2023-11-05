@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  memos:
+    image: neosmemo/memos:0.17
+    container_name: memos
+    restart: unless-stopped
+    volumes:
+      - ../../data/memos:/var/opt/memos
+    expose:
+      - "5230"
+
+networks:
+  default:
+    name: local 
+    external: true

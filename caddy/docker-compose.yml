@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  caddy:
+    image: caddy:alpine
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      - SELFHOST_DOMAIN=${SELFHOST_DOMAIN}
+      - EMAIL=${EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./site:/srv
+      - ./caddy_data:/data
+      - ./caddy_config:/config 
+
+networks:
+  default:
+    name: local
+    external: true

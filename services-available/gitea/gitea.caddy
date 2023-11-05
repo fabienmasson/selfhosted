@@ -1,0 +1,3 @@
+gitea.{$SELFHOST_DOMAIN} {
+	reverse_proxy gitea:3000
+}
