@@ -1,6 +1,19 @@
 gitea.{$SELFHOST_DOMAIN} {
 	reverse_proxy gitea:3000
 }
+music.{$SELFHOST_DOMAIN} {
+	reverse_proxy lms:5082
+	tls {$EMAIL}
+}
+memos.{$SELFHOST_DOMAIN} {
+	reverse_proxy memos:5230
+	tls {$EMAIL}
+}
+penpot.{$SELFHOST_DOMAIN} {
+      reverse_proxy penpot-frontend:80
+      tls {$EMAIL}
+}
+
 rss.{$SELFHOST_DOMAIN} {
 	reverse_proxy rss:80
 }

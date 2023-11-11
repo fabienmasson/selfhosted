@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  lms:
+    image: epoupon/lms
+    container_name: lms
+    restart: unless-stopped
+    user: "1000:1000"
+    volumes:
+      - ../../data/lms/music:/music:ro
+      - ../../data/lms/var:/var/lms
+    expose:
+      - "5082"
+
+networks:
+  default:
+    name: local 
+    external: true

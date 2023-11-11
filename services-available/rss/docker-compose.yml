@@ -3,12 +3,14 @@ services:
     rss:
         image: ghcr.io/ssddanbrown/rss:latest
         container_name: rss
+        env_file:
+          - ../../.env
         environment:
-            - APP_NAME=RSS
+          - APP_NAME=${RSS_APP_NAME:-RSS}
         volumes:
-            - ../../data/rss:/app/storage
+          - ../../data/rss:/app/storage
         expose:
-            - "80"
+          - "80"
         restart: unless-stopped
 
 networks:

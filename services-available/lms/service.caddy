@@ -1,0 +1,4 @@
+music.{$SELFHOST_DOMAIN} {
+	reverse_proxy lms:5082
+	tls {$EMAIL}
+}

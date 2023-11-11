@@ -13,54 +13,52 @@ services:
     restart: unless-stopped
     expose:
       - "80"
-
     volumes:
       - ../../data/penpot_assets:/opt/data/assets
-
     depends_on:
       - penpot-backend
       - penpot-exporter
-
     labels:
       - "traefik.enable=true"
-
+    env_file:
+      - ../../.env
     environment:
       - PENPOT_FLAGS=enable-registration enable-login-with-password
 
   penpot-backend:
     image: "penpotapp/backend:latest"
     restart: unless-stopped
-
     volumes:
       - ../../data/penpot_assets:/opt/data/assets
-
     depends_on:
       - penpot-postgres
       - penpot-redis
-
+    env_file:
+      - ../../.env
     environment:
       - PENPOT_FLAGS=enable-registration enable-login-with-password disable-email-verification enable-smtp enable-prepl-server
-      - PENPOT_PUBLIC_URI=https://penpot.trankilou.fr
-      - PENPOT_DATABASE_URI=postgresql://penpot-postgres/penpot
-      - PENPOT_DATABASE_USERNAME=penpot
-      - PENPOT_DATABASE_PASSWORD=penpot
+      - PENPOT_PUBLIC_URI=https://penpot.${SELFHOST_DOMAIN}
+      - PENPOT_DATABASE_URI=postgresql://penpot-postgres/${PENPOT_PG_DB:-penpot}
+      - PENPOT_DATABASE_USERNAME=${PENPOT_PG_USER:-penpot}
+      - PENPOT_DATABASE_PASSWORD=${PENPOT_PG_PASS:?penpot pg pass required}
       - PENPOT_REDIS_URI=redis://penpot-redis/0
       - PENPOT_ASSETS_STORAGE_BACKEND=assets-fs
       - PENPOT_STORAGE_ASSETS_FS_DIRECTORY=/opt/data/assets
-      - PENPOT_TELEMETRY_ENABLED=true
-      - PENPOT_SMTP_DEFAULT_FROM=no-reply@example.com
-      - PENPOT_SMTP_DEFAULT_REPLY_TO=no-reply@example.com
-      - PENPOT_SMTP_HOST=penpot-mailcatch
-      - PENPOT_SMTP_PORT=1025
-      - PENPOT_SMTP_USERNAME=
-      - PENPOT_SMTP_PASSWORD=
+      - PENPOT_TELEMETRY_ENABLED=false
+      - PENPOT_SMTP_DEFAULT_FROM=${PENPOT_SMTP_DEFAULT_FROM}
+      - PENPOT_SMTP_DEFAULT_REPLY_TO=${PENPOT_SMTP_DEFAULT_REPLY_TO}
+      - PENPOT_SMTP_HOST=${PENPOT_SMTP_HOST:-penpot-mailcatch}
+      - PENPOT_SMTP_PORT=${PENPOT_SMTP_PORT:-1025}
+      - PENPOT_SMTP_USERNAME=${PENPOT_SMTP_USERNAME}
+      - PENPOT_SMTP_PASSWORD=${PENPOT_SMTP_PASSWORD}
       - PENPOT_SMTP_TLS=false
       - PENPOT_SMTP_SSL=false
 
   penpot-exporter:
     image: "penpotapp/exporter:latest"
     restart: unless-stopped
-
+    env_file:
+      - ../../.env
     environment:
       - PENPOT_PUBLIC_URI=http://penpot-frontend
       - PENPOT_REDIS_URI=redis://penpot-redis/0
@@ -69,15 +67,15 @@ services:
     image: "postgres:15"
     restart: unless-stopped
     stop_signal: SIGINT
-
     volumes:
       - ../../data/penpot_postgres_v15:/var/lib/postgresql/data
-
+    env_file:
+      - ../../.env
     environment:
       - POSTGRES_INITDB_ARGS=--data-checksums
-      - POSTGRES_DB=penpot
-      - POSTGRES_USER=penpot
-      - POSTGRES_PASSWORD=penpot
+      - POSTGRES_DB=${PENPOT_PG_DB:-penpot}
+      - POSTGRES_USER=${PENPOT_PG_USER:-penpot}
+      - POSTGRES_PASSWORD=${PENPOT_PG_PASS:?penpot pg password required}
 
   penpot-redis:
     image: redis:7
